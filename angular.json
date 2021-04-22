@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "eletest",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "eletest": {
+      "projectType": "application",
+      "root": "apps/eletest",
+      "sourceRoot": "apps/eletest/src",
+      "prefix": "elements-and-cypress",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/eletest",
+            "index": "apps/eletest/src/index.html",
+            "main": "apps/eletest/src/main.ts",
+            "polyfills": "apps/eletest/src/polyfills.ts",
+            "tsConfig": "apps/eletest/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/eletest/src/favicon.ico",
+              "apps/eletest/src/assets"
+            ],
+            "styles": ["apps/eletest/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/eletest/src/environments/environment.ts",
+                  "with": "apps/eletest/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "eletest:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "eletest:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "eletest:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/eletest/src/**/*.ts",
+              "apps/eletest/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/eletest"],
+          "options": {
+            "jestConfig": "apps/eletest/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "eletest-e2e": {
+      "root": "apps/eletest-e2e",
+      "sourceRoot": "apps/eletest-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/eletest-e2e/cypress.json",
+            "tsConfig": "apps/eletest-e2e/tsconfig.e2e.json",
+            "devServerTarget": "eletest:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "eletest:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/eletest-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
