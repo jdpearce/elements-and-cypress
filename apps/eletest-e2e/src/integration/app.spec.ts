@@ -1,13 +1,19 @@
-import { getGreeting } from '../support/app.po';
-
 describe('eletest', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
+  it('should display the popup as an element', () => {
+    cy.get('popup-element').should('not.exist');
 
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome to eletest!');
+    cy.get('[data-testid=show-as-element]').click();
+
+    cy.get('popup-element').should('exist');
+  });
+
+  it('should display the popup as a component', () => {
+    cy.get('popup-component').should('not.exist');
+
+    cy.get('[data-testid=show-as-component]').click();
+
+    cy.get('popup-component').should('exist');
   });
 });
